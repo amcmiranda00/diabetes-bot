@@ -1,0 +1,6 @@
+services:
+  - type: worker
+    name: diabetes-bot
+    env: python
+    buildCommand: ""
+    startCommand: ./start.sh
