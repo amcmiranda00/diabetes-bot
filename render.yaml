@@ -1,6 +1,8 @@
 services:
-  - type: worker
+  - type: web
     name: diabetes-bot
     env: python
-    buildCommand: ""
-    startCommand: ./start.sh
+    plan: free
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "python bot_diabetes.py"
+    autoDeploy: true
