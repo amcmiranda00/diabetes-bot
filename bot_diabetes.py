@@ -1,7 +1,7 @@
 from telegram import Update
 from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, ContextTypes, filters
 
-TOKEN = "AQUI_VA_TU_TOKEN"
+TOKEN = "7914009689:AAHQo8EOuLzolt_kmuIaSQJGj-QuQE23jck"
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     await update.message.reply_text("Hola, soy tu bot de diabetes. ¿Qué quieres registrar?")
