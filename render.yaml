@@ -2,6 +2,7 @@ services:
   - type: web
     name: diabetes-bot
     env: python
+    pythonVersion: 3.10.13
     plan: free
     buildCommand: "pip install -r requirements.txt"
     startCommand: "python bot_diabetes.py"
