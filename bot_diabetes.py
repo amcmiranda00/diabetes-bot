@@ -14,7 +14,7 @@ def main():
 
     application.add_handler(CommandHandler("start", start))
     application.add_handler(CommandHandler("help", help_command))
-    application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, start))
+    application.add_handler(MessageHandler(filters.TEXT(True) & ~filters.COMMAND, start))
 
     application.run_polling()
 
