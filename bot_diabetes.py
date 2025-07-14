@@ -1,7 +1,6 @@
 import csv
 from datetime import datetime
-from telegram import Update
-from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, ContextTypes, filters
+from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 
 TOKEN = "7914009689:AAHQo8EOuLzolt_kmuIaSQJGj-QuQE23jck"
 ARCHIVO = "diario_diabetes.csv"
@@ -16,7 +15,7 @@ def inicializar_csv():
 
 inicializar_csv()
 
-async def registrar(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+def registrar(update, context):
     texto = update.message.text.lower()
     now = datetime.now().strftime("%Y-%m-%d %H:%M")
 
@@ -47,31 +46,28 @@ async def registrar(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         writer = csv.writer(f)
         writer.writerow([now, glucosa, comida, insulina, observaciones])
 
-    await update.message.reply_text(
-        f"📝 Registro guardado:\n"
-        f"🕒 {now}\n"
-        f"🩸 Glucosa: {glucosa or 'No registrada'}\n"
-        f"🍽️ Comida: {comida or 'No registrada'}\n"
-        f"💉 Insulina: {insulina or 'No registrada'}\n"
-        f"🗒️ Observaciones: {observaciones or 'Ninguna'}"
+    context.bot.send_message(chat_id=update.effective_chat.id,
+        text=(
+            f"📝 Registro guardado:\n"
+            f"🕒 {now}\n"
+            f"🩸 Glucosa: {glucosa or 'No registrada'}\n"
+            f"🍽️ Comida: {comida or 'No registrada'}\n"
+            f"💉 Insulina: {insulina or 'No registrada'}\n"
+            f"🗒️ Observaciones: {observaciones or 'Ninguna'}"
+        )
     )
 
-async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    await update.message.reply_text(
-        "¡Hola Miguel! Soy tu bot de diario de diabetes.\n\n"
-        "Solo escríbeme tu glucosa, lo que comiste o la insulina que te aplicaste,\n"
-        "y lo registraré por ti 📊"
+def start(update, context):
+    context.bot.send_message(chat_id=update.effective_chat.id,
+        text="¡Hola Miguel! Soy tu bot de diario de diabetes.\n\nSolo escríbeme tu glucosa, lo que comiste o la insulina que te aplicaste, y lo registraré por ti 📊"
     )
 
 if __name__ == "__main__":
-   from telegram.ext import Updater
+    updater = Updater(TOKEN, use_context=True)
+    dp = updater.dispatcher
 
-updater = Updater(TOKEN)
-dispatcher = updater.dispatcher
+    dp.add_handler(CommandHandler("start", start))
+    dp.add_handler(MessageHandler(Filters.text & ~Filters.command, registrar))
 
-dispatcher.add_handler(CommandHandler("start", start))
-dispatcher.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, registrar))
-
-updater.start_polling()
-updater.idle()
-
+    updater.start_polling()
+    updater.idle()
