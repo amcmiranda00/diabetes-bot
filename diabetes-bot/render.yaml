@@ -1,6 +1,0 @@
-services:
-  - type: web
-    name: diabetes-bot
-    env: python
-    buildCommand: ""
-    startCommand: "python bot_diabetes.py"
